@@ -85,69 +85,54 @@ public class GridGame {
         // if player moves to a position occupied by a Treasure, add its point value to the players score,
         // and replace that element with a Space object (with "_" symbol).
         // if the player reaches the goal, end the game and print their final score and the number of moves it took
-        while (!(board[0][7].getSymbol().equals("M"))) {
-            printBoard();
+        int row = 7;  // Starting row for player (M)
+        int col = 0;  // Starting column for player (M)
+        boolean gameWon = false;
+        int moves = 0;
+
+        while (!gameWon) {
+            printBoard();  // Print the current board
             System.out.print("Which direction do you want to go? (W,A,S,D): ");
-            String direction = scanner.nextLine();
-            int row = 7;
-            int col = 0;
-            if (direction.equals("D") && inBounds(row,col+1)) {
-                for (int i = 0; i < board.length; i++) {
-                    for (int j = 0; j < board[i].length; j++) {
-                        if (board[i][j].getSymbol().equals("M")) {
-                            board[i][j] = new Space("_");
-                            board[i][j + 1] = new Space("M");
-                            col = j + 1;
-                        }
+            String direction = scanner.nextLine().toUpperCase();  // Make input case-insensitive
 
-                    }
-                }
-
-            }
-            if (direction.equals("A") && inBounds(row,col-1)) {
-                for (int i = 0; i < board.length; i++) {
-                    for (int j = 0; j < board[i].length; j++) {
-                        if (board[i][j].getSymbol().equals("M")) {
-                            board[i][j] = new Space("_");
-                            board[i][j - 1] = new Space("M");
-                            col = j - 1;
-                        }
-
-                    }
-
-                }
-
-            }
-            if (direction.equals("W") && inBounds(row-1,col)) {
-                for (int i = 0; i < board.length; i++) {
-                    for (int j = 0; j < board[i].length; j++) {
-                        if (board[i][j].getSymbol().equals("M")) {
-                            board[i][j] = new Space("_");
-                            board[i - 1][j] = new Space("M");
-                            row = i - 1;
-                        }
-
-                    }
-
-                }
-
-            }
-            if (direction.equals("S") && inBounds(row+1,col)) {
-                for (int i = 0; i < board.length; i++) {
-                    for (int j = 0; j < board[i].length; j++) {
-                        if (board[i][j].getSymbol().equals("M")) {
-                            board[i][j] = new Space("_");
-                            board[i + 1][j] = new Space("M");
-                            row = i + 1;
-                        }
-
-                    }
-
-                }
-
+            // Move the player based on the input direction
+            if (direction.equals("D") && inBounds(row, col + 1)) {
+                board[row][col] = new Space("_");  // Clear the old position
+                col++;  // Move right
+            } else if (direction.equals("A") && inBounds(row, col - 1)) {
+                board[row][col] = new Space("_");  // Clear the old position
+                col--;  // Move left
+            } else if (direction.equals("W") && inBounds(row - 1, col)) {
+                board[row][col] = new Space("_");  // Clear the old position
+                row--;  // Move up
+            } else if (direction.equals("S") && inBounds(row + 1, col)) {
+                board[row][col] = new Space("_");  // Clear the old position
+                row++;  // Move down
             }
 
+            // Check if the player moves onto a treasure (represented by "O")
+            if (board[row][col].getSymbol().equals("O")) {
+                // For example, assume "O" is a treasure
+                player.addPoints(5);  // Add score for the treasure
+                board[row][col] = new Space("_");  // Remove the treasure
+            }
+
+            // Place the player at the new position
+            board[row][col] = new Space("M");
+
+            // Check if the player has reached the goal
+            if (row == 0 && col == 7) {
+                gameWon = true;
+                System.out.println("Congratulations, you've reached the goal!");
+                System.out.println("Your final score is: " + player.getScore());
+                System.out.println("You took " + moves + " moves.");
+            }
+
+            moves++;
         }
+
+
+
 
 
     }
